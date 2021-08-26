@@ -25,7 +25,7 @@ hourly_bike = pd.DataFrame(hourly_bike)
 
 node_num = 272 # node number 
 feature_in = 24 # number of features at each node, e.g., bike sharing demand from past 24 hours
-horizon = 1 # the length to predict, e.g., predict the future one hour bike sharing demand
+horizon = 24 # the length to predict, e.g., predict the future one hour bike sharing demand
 
 X_whole = []
 Y_whole = []
