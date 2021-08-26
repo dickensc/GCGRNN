@@ -34,7 +34,7 @@ x_offsets = np.sort(
     np.concatenate((np.arange(-feature_in+1, 1, 1),))
 )
 
-y_offsets = np.sort(np.arange(1, 1+ horizon, 1))
+y_offsets = np.sort(np.arange(1, 1 + horizon, 1))
 
 min_t = abs(min(x_offsets))
 max_t = abs(hourly_bike.shape[0] - abs(max(y_offsets)))  # Exclusive
@@ -46,14 +46,15 @@ for t in range(min_t, max_t):
 
 X_whole = np.stack(X_whole, axis=0)
 Y_whole = np.stack(Y_whole, axis=0)
-
-
 X_whole = np.reshape(X_whole, [X_whole.shape[0], node_num, feature_in])
+
+# split the dataset into train val test
 num_samples = X_whole.shape[0]
-num_train = 20000 
+num_train = 20000
 num_val = 2000
 num_test = 2000
 
+# Train
 X_training = X_whole[:num_train, :]
 Y_training = Y_whole[:num_train, :]
 
@@ -63,11 +64,13 @@ np.random.shuffle(perm)
 X_training = X_training[perm]
 Y_training = Y_training[perm]
 
-X_val = X_whole[num_train:num_train+num_val, :]
-Y_val = Y_whole[num_train:num_train+num_val, :]
+# Validation
+X_val = X_whole[num_train:num_train+num_val:horizon, :]
+Y_val = Y_whole[num_train:num_train+num_val:horizon, :]
 
-X_test = X_whole[num_train+num_val:num_train+num_val+num_test, :]
-Y_test = Y_whole[num_train+num_val:num_train+num_val+num_test, :]
+# Test
+X_test = X_whole[num_train+num_val:num_train+num_val+num_test:horizon, :]
+Y_test = Y_whole[num_train+num_val:num_train+num_val+num_test:horizon, :]
 
 
 scaler = StandardScaler(mean=X_training.mean(), std=X_training.std())
