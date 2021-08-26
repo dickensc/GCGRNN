@@ -103,15 +103,15 @@ training_epochs = 500 # total training epochs
 
 start_time = datetime.datetime.now()
 
-val_error, predic_res, test_Y, test_error, bestWeightA = gcnn_ddgf(hidden_num_layer, reg_weight, node_num, feature_in, horizon, learning_rate, decay, batchsize, keep, early_stop_th, training_epochs, X_training, Y_training, X_val, Y_val, X_test, Y_test, scaler, 'RMSE')
+val_error, predic_val, test_Y, test_error, bestWeightA = gcnn_ddgf(hidden_num_layer, reg_weight, node_num, feature_in, horizon, learning_rate, decay, batchsize, keep, early_stop_th, training_epochs, X_training, Y_training, X_val, Y_val, X_test, Y_test, scaler, 'RMSE')
 
 
 end_time = datetime.datetime.now()
 
 print('Total training time: ', end_time-start_time)
 
-#np.savetxt("prediction.csv", predic_res, delimiter = ',')
-#np.savetxt("prediction_Y.csv", test_Y, delimiter = ',')
+np.savetxt("prediction_validation.csv", predic_val, delimiter = ',')
+np.savetxt("prediction_test.csv", test_Y, delimiter = ',')
 
 
 
