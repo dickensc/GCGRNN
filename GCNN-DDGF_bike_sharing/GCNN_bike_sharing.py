@@ -17,7 +17,7 @@ def main(file_name):
 
     # Split Data into Training, Validation and Testing
 
-    node_num = 272 # node number
+    node_num = hourly_bike.shape[1] # node number
     feature_in = 24 # number of features at each node, e.g., bike sharing demand from past 24 hours
     horizon = 24 # the length to predict, e.g., predict the future one hour bike sharing demand
 
@@ -25,7 +25,7 @@ def main(file_name):
     Y_whole = []
 
     x_offsets = np.sort(
-        np.concatenate((np.arange(-feature_in+1, 1, 1),))
+        np.concatenate((np.arange(-feature_in + 1, 1, 1),))
     )
 
     y_offsets = np.sort(np.arange(1, 1 + horizon, 1))
@@ -44,9 +44,9 @@ def main(file_name):
 
     # split the dataset into train val test
     num_samples = X_whole.shape[0]
-    num_train = 20000
-    num_val = 2000
-    num_test = 2000
+    num_train = num_samples - 60 * 24
+    num_val = 30 * 24
+    num_test = 30 * 24
 
     # Train
     X_training = X_whole[:num_train, :]
@@ -79,7 +79,6 @@ def main(file_name):
     Y_test = scaler.transform(Y_test)
 
     # Hyperparameters
-
     learning_rate = 0.01 # learning rate
     decay = 0.9
     batchsize = 100 # batch size
@@ -92,13 +91,10 @@ def main(file_name):
     early_stop_th = 200 # early stopping threshold, if validation RMSE not dropping in continuous 20 steps, break
     training_epochs = 500 # total training epochs
 
-
     # Training
-
     start_time = datetime.datetime.now()
 
     val_error, predic_val, test_Y, test_error, bestWeightA = gcnn_ddgf(hidden_num_layer, reg_weight, node_num, feature_in, horizon, learning_rate, decay, batchsize, keep, early_stop_th, training_epochs, X_training, Y_training, X_val, Y_val, X_test, Y_test, scaler, 'RMSE')
-
 
     end_time = datetime.datetime.now()
 

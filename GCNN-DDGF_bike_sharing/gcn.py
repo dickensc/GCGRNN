@@ -163,6 +163,6 @@ def gcnn_ddgf(hidden_num_layer, reg_weight, node_num, feature_in, horizon, learn
     
     #test_Y = Y_test
     #test_error = np.sqrt(test_error)
-    return best_val, predic_res,Y_true,test_error, bestWeightA
+    return best_val, predic_res, Y_true, test_error, bestWeightA
 
 
