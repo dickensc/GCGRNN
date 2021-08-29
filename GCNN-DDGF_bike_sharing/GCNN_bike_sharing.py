@@ -27,6 +27,7 @@ def main(demand_type):
     # Import Data
     fileObject = open(file_name, 'rb')
     hourly_bike = pickle.load(fileObject)
+    hourly_bike = pd.DataFrame(hourly_bike)
 
     # Split Data into Training, Validation and Testing
     node_num = hourly_bike.shape[1] # node number
@@ -57,8 +58,8 @@ def main(demand_type):
     # split the dataset into train val test
     num_samples = X_whole.shape[0]
     num_train = train_index.shape[0]
-    num_val = 30 * 24
-    num_test = 30 * 24
+    num_val = val_index.shape[0]
+    num_test = test_index.shape[0]
 
     # Train
     X_training = X_whole[:num_train, :]
