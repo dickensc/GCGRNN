@@ -10,7 +10,7 @@ from gcn import gcn, gcnn_ddgf
 
 
 def main(demand_type):
-    file_name = "../../bikeshare-experiments/data/bikeshare/" + demand_type + "_demand.pickle"
+    file_name = "../../bikeshare-experiments/data/eval/bikeshare/" + demand_type + "_demand.pickle"
     # Import Data
     fileObject = open(file_name, 'rb')
     hourly_bike = pickle.load(fileObject)
