@@ -102,7 +102,7 @@ def main(demand_type):
     print('Total training time: ', end_time-start_time)
 
     # Extract results
-    if os.path.exists("../../bikeshare-experiments/results/GCNN"):
+    if not os.path.exists("../../bikeshare-experiments/results/GCNN"):
         os.makedirs("../../bikeshare-experiments/results/GCNN")
 
     # Compute Validation RMSE by day.
