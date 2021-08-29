@@ -95,7 +95,7 @@ def main(demand_type):
     # Training
     start_time = datetime.datetime.now()
 
-    val_error, predic_val, test_Y, test_error, bestWeightA = gcnn_ddgf(hidden_num_layer, reg_weight, node_num, feature_in, horizon, learning_rate, decay, batchsize, keep, early_stop_th, training_epochs, X_training, Y_training, X_val, Y_val, X_test, Y_test, scaler, 'RMSE')
+    val_error, predic_val, predic_test, test_Y, test_error, bestWeightA = gcnn_ddgf(hidden_num_layer, reg_weight, node_num, feature_in, horizon, learning_rate, decay, batchsize, keep, early_stop_th, training_epochs, X_training, Y_training, X_val, Y_val, X_test, Y_test, scaler, 'RMSE')
 
     end_time = datetime.datetime.now()
 
@@ -127,7 +127,7 @@ def main(demand_type):
         for station_index in np.arange(node_num):
             # Compute station RMSE
             rmse = np.sqrt(np.sum(
-                np.square(test_Y[time_step, station_index * 24: station_index * 24 + 24]
+                np.square(predic_test[time_step, station_index * 24: station_index * 24 + 24]
                           - scaler.inverse_transform(Y_test)[time_step, station_index * 24: station_index * 24 + 24]) / 24))
             rmse_series = pd.Series({
                 'time_step': time_step,

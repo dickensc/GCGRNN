@@ -42,7 +42,7 @@ def gcnn_ddgf(hidden_num_layer, reg_weight, node_num, feature_in, horizon, learn
     best_val = 10000
     traing_error = 0
     test_error = 0
-    predic_res = []
+    final_pred_test = []
     bestWeightA = {}
 
     tf.reset_default_graph()
@@ -130,12 +130,11 @@ def gcnn_ddgf(hidden_num_layer, reg_weight, node_num, feature_in, horizon, learn
             if epoch % display_step == 0:
                 print ("Epoch:", '%04d' % (epoch+1), "Training " + criterion+ " =",                     "{:.9f}".format(avg_cost))
             # validation
-            c_val = sess.run([cost], feed_dict={X: X_val, Y: Y_val,  keep_prob:1})
-            c_val = c_val[0]
+            c_val, pred_val = sess.run([cost, pred], feed_dict={X: X_val, Y: Y_val,  keep_prob:1})
             print("Validation " + criterion + ":", c_val)
             # testing
-            c_tes, preds, Y_true, weights_A_final = sess.run([cost, pred, Y_original, weights_A], feed_dict={X: X_test,Y: Y_test, keep_prob: 1})
-            
+            c_tes, pred_test, Y_true, weights_A_final = sess.run([cost, pred, Y_original, weights_A], feed_dict={X: X_test,Y: Y_test, keep_prob: 1})
+
 
             if c_val < best_val:
                 best_val = c_val
@@ -143,7 +142,8 @@ def gcnn_ddgf(hidden_num_layer, reg_weight, node_num, feature_in, horizon, learn
                 #saver.save(sess, './bikesharing_gcnn_ddgf')
                 test_error = c_tes
                 traing_error = avg_cost
-                predic_res = preds
+                final_pred_test = pred_test
+                final_pred_val = pred_val
                 bestWeightA = weights_A_final
                 early_stop_k = 0 # reset to 0
 
@@ -163,6 +163,6 @@ def gcnn_ddgf(hidden_num_layer, reg_weight, node_num, feature_in, horizon, learn
     
     #test_Y = Y_test
     #test_error = np.sqrt(test_error)
-    return best_val, predic_res, Y_true, test_error, bestWeightA
+    return best_val, final_pred_val, final_pred_test, Y_true, test_error, bestWeightA
 
 
