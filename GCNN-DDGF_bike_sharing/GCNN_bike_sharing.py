@@ -3,12 +3,14 @@ import pandas as pd
 import pickle
 import datetime
 import sys
+import os
 
 from utils import normalize_adj, StandardScaler
 from gcn import gcn, gcnn_ddgf
 
 
-def main(file_name):
+def main(demand_type):
+    file_name = '../../bikeshare-experiments/data/bikeshare/%s_demand.pickle'.format(demand_type)
     # Import Data
     fileObject = open(file_name, 'rb')
     hourly_bike = pickle.load(fileObject)
@@ -16,7 +18,6 @@ def main(file_name):
 
 
     # Split Data into Training, Validation and Testing
-
     node_num = hourly_bike.shape[1] # node number
     feature_in = 24 # number of features at each node, e.g., bike sharing demand from past 24 hours
     horizon = 24 # the length to predict, e.g., predict the future one hour bike sharing demand
@@ -100,12 +101,48 @@ def main(file_name):
 
     print('Total training time: ', end_time-start_time)
 
-    np.savetxt("prediction_validation.csv", predic_val, delimiter = ',')
-    np.savetxt("prediction_test.csv", test_Y, delimiter = ',')
+    # Extract results
+    if os.path.exists("../../bikeshare-experiments/results/GCNN"):
+        os.makedirs("../../bikeshare-experiments/results/GCNN")
+
+    # Compute Validation RMSE by day.
+    rmse_frame = pd.DataFrame(columns=['time_step', 'station_index', 'RMSE'])
+    for time_step in np.arange(30):
+        for station_index in np.arange(node_num):
+            # Compute station RMSE
+            rmse = np.sqrt(np.sum(
+                np.square(predic_val[time_step, station_index * 24: station_index * 24 + 24]
+                          - scaler.inverse_transform(Y_val)[time_step, station_index * 24: station_index * 24 + 24]) / 24))
+            rmse_series = pd.Series({
+                'time_step': time_step,
+                'station_index': station_index,
+                'RMSE': rmse
+            })
+            rmse_frame = rmse_frame.append(rmse_series, ignore_index=True)
+    rmse_frame.to_csv("../../bikeshare-experiments/results/GCNN/validation_daily_station_rmse.csv")
+
+    # Compute Test RMSE by day.
+    rmse_frame = pd.DataFrame(columns=['time_step', 'station_index', 'RMSE'])
+    for time_step in np.arange(30):
+        for station_index in np.arange(node_num):
+            # Compute station RMSE
+            rmse = np.sqrt(np.sum(
+                np.square(test_Y[time_step, station_index * 24: station_index * 24 + 24]
+                          - scaler.inverse_transform(Y_test)[time_step, station_index * 24: station_index * 24 + 24]) / 24))
+            rmse_series = pd.Series({
+                'time_step': time_step,
+                'station_index': station_index,
+                'RMSE': rmse
+            })
+            rmse_frame = rmse_frame.append(rmse_series, ignore_index=True)
+    rmse_frame.to_csv("../../bikeshare-experiments/results/GCNN/test_daily_station_rmse.csv")
+
+    np.savetxt("../../bikeshare-experiments/results/GCNN/%s_prediction_validation.csv".format(demand_type), predic_val, delimiter = ',')
+    np.savetxt("../../bikeshare-experiments/results/GCNN/%s_prediction_test.csv".format(demand_type), test_Y, delimiter = ',')
 
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
-        print("Usage: python2 GCNN_bike_sharing.py <path to pickled data file>")
+        print("Usage: python2 GCNN_bike_sharing.py <arrival or departure>")
 
     main(sys.argv[1])
