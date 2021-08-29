@@ -76,7 +76,7 @@ def gcnn_ddgf(hidden_num_layer, reg_weight, node_num, feature_in, horizon, learn
  
     # Construct model
     hidden_num = len(hidden_num_layer) 
-    pred= gcn(X, weights_hidden, weights_A, biases, hidden_num, node_num, horizon)
+    pred = gcn(X, weights_hidden, weights_A, biases, hidden_num, node_num, horizon)
     pred = scaler.inverse_transform(pred)
     Y_original = scaler.inverse_transform(Y)
 
@@ -132,7 +132,7 @@ def gcnn_ddgf(hidden_num_layer, reg_weight, node_num, feature_in, horizon, learn
             # validation
             c_val = sess.run([cost], feed_dict={X: X_val, Y: Y_val,  keep_prob:1})
             c_val = c_val[0]
-            print("Validation " + criterion+":", c_val)
+            print("Validation " + criterion + ":", c_val)
             # testing
             c_tes, preds, Y_true, weights_A_final = sess.run([cost, pred, Y_original, weights_A], feed_dict={X: X_test,Y: Y_test, keep_prob: 1})
             
