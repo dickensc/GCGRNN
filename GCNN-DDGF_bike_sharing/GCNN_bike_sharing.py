@@ -8,14 +8,25 @@ import os
 from utils import normalize_adj, StandardScaler
 from gcn import gcn, gcnn_ddgf
 
+# Set a start date and end date.
+START_DATE = datetime.date(2013, 8, 29)
+VALIDATION_END_DATE = datetime.date(2015, 5, 1)
+TEST_END_DATE = datetime.date(2015, 6, 1)
+
+TIME_STEP_HR = '1h'
 
 def main(demand_type):
+    train_index = pd.date_range(START_DATE, VALIDATION_END_DATE - datetime.timedelta(days=30), freq=TIME_STEP_HR,
+                                closed='left')
+    val_index = pd.date_range(VALIDATION_END_DATE - datetime.timedelta(days=30), VALIDATION_END_DATE, freq=TIME_STEP_HR,
+                              closed='left')
+    test_index = pd.date_range(TEST_END_DATE - datetime.timedelta(days=30), TEST_END_DATE, freq=TIME_STEP_HR,
+                               closed='left')
+
     file_name = "../../bikeshare-experiments/data/bikeshare/eval/" + demand_type + "_demand.pickle"
     # Import Data
     fileObject = open(file_name, 'rb')
     hourly_bike = pickle.load(fileObject)
-    hourly_bike = pd.DataFrame(hourly_bike)
-
 
     # Split Data into Training, Validation and Testing
     node_num = hourly_bike.shape[1] # node number
@@ -45,7 +56,7 @@ def main(demand_type):
 
     # split the dataset into train val test
     num_samples = X_whole.shape[0]
-    num_train = num_samples - 60 * 24
+    num_train = train_index.shape[0]
     num_val = 30 * 24
     num_test = 30 * 24
 
