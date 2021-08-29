@@ -140,8 +140,8 @@ def main(demand_type):
     np.savetxt("../../bikeshare-experiments/results/GCNN/" + demand_type + "_prediction_validation.csv", predic_val, delimiter=',')
     np.savetxt("../../bikeshare-experiments/results/GCNN/" + demand_type + "_prediction_test.csv", predic_test, delimiter=',')
 
-    np.savetxt("../../bikeshare-experiments/results/GCNN/" + demand_type + "_true_validation.csv", Y_val, delimiter=',')
-    np.savetxt("../../bikeshare-experiments/results/GCNN/" + demand_type + "_true_test.csv", Y_test, delimiter=',')
+    np.savetxt("../../bikeshare-experiments/results/GCNN/" + demand_type + "_true_validation.csv", scaler.inverse_transform(Y_val), delimiter=',')
+    np.savetxt("../../bikeshare-experiments/results/GCNN/" + demand_type + "_true_test.csv", scaler.inverse_transform(Y_test), delimiter=',')
 
 
 if __name__ == "__main__":
