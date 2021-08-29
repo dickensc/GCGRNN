@@ -138,7 +138,7 @@ def main(demand_type):
     rmse_frame.to_csv("../../bikeshare-experiments/results/GCNN/" + demand_type + "_test_daily_station_rmse.csv")
 
     np.savetxt("../../bikeshare-experiments/results/GCNN/" + demand_type + "_prediction_validation.csv", predic_val, delimiter=',')
-    np.savetxt("../../bikeshare-experiments/results/GCNN/" + demand_type + "_prediction_test.csv", test_Y, delimiter=',')
+    np.savetxt("../../bikeshare-experiments/results/GCNN/" + demand_type + "_prediction_test.csv", predic_test, delimiter=',')
 
 
 if __name__ == "__main__":
