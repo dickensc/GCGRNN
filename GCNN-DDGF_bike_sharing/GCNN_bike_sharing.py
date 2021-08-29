@@ -10,7 +10,7 @@ from gcn import gcn, gcnn_ddgf
 
 
 def main(demand_type):
-    file_name = '../../bikeshare-experiments/data/bikeshare/%s_demand.pickle'.format(demand_type)
+    file_name = "../../bikeshare-experiments/data/bikeshare/" + demand_type + "_demand.pickle"
     # Import Data
     fileObject = open(file_name, 'rb')
     hourly_bike = pickle.load(fileObject)
@@ -119,7 +119,7 @@ def main(demand_type):
                 'RMSE': rmse
             })
             rmse_frame = rmse_frame.append(rmse_series, ignore_index=True)
-    rmse_frame.to_csv("../../bikeshare-experiments/results/GCNN/validation_daily_station_rmse.csv")
+    rmse_frame.to_csv("../../bikeshare-experiments/results/GCNN/" + demand_type + "_validation_daily_station_rmse.csv")
 
     # Compute Test RMSE by day.
     rmse_frame = pd.DataFrame(columns=['time_step', 'station_index', 'RMSE'])
@@ -135,10 +135,10 @@ def main(demand_type):
                 'RMSE': rmse
             })
             rmse_frame = rmse_frame.append(rmse_series, ignore_index=True)
-    rmse_frame.to_csv("../../bikeshare-experiments/results/GCNN/test_daily_station_rmse.csv")
+    rmse_frame.to_csv("../../bikeshare-experiments/results/GCNN/" + demand_type + "_test_daily_station_rmse.csv")
 
-    np.savetxt("../../bikeshare-experiments/results/GCNN/%s_prediction_validation.csv".format(demand_type), predic_val, delimiter = ',')
-    np.savetxt("../../bikeshare-experiments/results/GCNN/%s_prediction_test.csv".format(demand_type), test_Y, delimiter = ',')
+    np.savetxt("../../bikeshare-experiments/results/GCNN/" + demand_type + "_prediction_validation.csv", predic_val, delimiter=',')
+    np.savetxt("../../bikeshare-experiments/results/GCNN/" + demand_type + "_prediction_test.csv", test_Y, delimiter=',')
 
 
 if __name__ == "__main__":
